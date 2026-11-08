@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Собери ПК под свои задачи — калькулятор сборки</title>
+<style>
+  :root{
+    --bg:#0f1220; --card:#181c2f; --accent:#5b8cff; --accent2:#8b5cf6;
+    --text:#e8eaf6; --muted:#9aa0b5; --ok:#22c55e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:linear-gradient(160deg,#0f1220,#141a2e 60%,#1a1330);
+    color:var(--text);min-height:100vh;padding:24px;
+  }
+  .wrap{max-width:1000px;margin:0 auto}
+  header{text-align:center;margin-bottom:28px}
+  h1{font-size:clamp(24px,4vw,38px);margin-bottom:10px}
+  h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);font-size:16px}
+  .panel{
+    background:var(--card);border:1px solid #262b45;border-radius:18px;
+    padding:22px;margin-bottom:22px;box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+  .chip{
+    padding:10px 16px;border-radius:12px;border:1px solid #2e3452;
+    background:#12162a;cursor:pointer;transition:.15s;font-size:14px;
+  }
+  .chip:hover{border-color:var(--accent)}
+  .chip.active{background:linear-gradient(90deg,var(--accent),var(--accent2));
+    border-color:transparent;color:#fff;font-weight:600}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  input[type=number]{
+    width:100%;padding:12px 14px;border-radius:12px;border:1px solid #2e3452;
+    background:#12162a;color:var(--text);font-size:16px;outline:none;
+  }
+  input[type=number]:focus{border-color:var(--accent)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  button.go{
+    width:100%;margin-top:6px;padding:14px;border:none;border-radius:14px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;
+    font-size:16px;font-weight:700;cursor:pointer;transition:.15s;
+  }
+  button.go:hover{filter:brightness(1.1)}
+  .builds{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .build{
+    background:var(--card);border:1px solid #262b45;border-radius:18px;
+    padding:20px;display:flex;flex-direction:column;gap:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .build h3{font-size:18px}
+  .build .price{font-size:26px;font-weight:800;color:var(--ok)}
+  .build .tag{font-size:12px;color:var(--muted)}
+  .parts{list-style:none;font-size:14px;display:flex;flex-direction:column;gap:6px}
+  .parts li{display:flex;justify-content:space-between;gap:8px;
+    border-bottom:1px dashed #262b45;padding-bottom:6px}
+  .parts li:last-child{border:none}
+  .parts .name{color:var(--muted)}
+  .buy{
+    margin-top:auto;text-align:center;text-decoration:none;padding:12px;
+    border-radius:12px;background:#12162a;border:1px solid #2e3452;
+    color:var(--text);font-weight:600;transition:.15s;
+  }
+  .buy:hover{border-color:var(--accent);background:#1a2040}
+  .badge{display:inline-block;font-size:12px;padding:4px 10px;border-radius:999px;
+    background:#1a2040;color:var(--accent);border:1px solid #2e3452}
+  .empty{text-align:center;color:var(--muted);padding:30px 0}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Собери <span>ПК</span> под свои задачи</h1>
+    <p class="sub">Выбери задачу и бюджет — получишь готовые сборки с ценами и ссылками</p>
+  </header>
+
+  <div class="panel">
+    <label>Для чего нужен ПК?</label>
+    <div class="row" id="tasks">
+      <div class="chip active" data-task="office">Офис / учёба</div>
+      <div class="chip" data-task="gaming">Игры</div>
+      <div class="chip" data-task="montage">Монтаж видео</div>
+      <div class="chip" data-task="design">Дизайн / 3D</div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label>Бюджет, ₽</label>
+        <input type="number" id="budget" value="80000" min="20000" step="5000">
+      </div>
+      <div>
+        <label>Магазин для ссылок</label>
+        <div class="row" id="shops" style="margin-top:0">
+          <div class="chip active" data-shop="dns">DNS</div>
+          <div class="chip" data-shop="citilink">Ситилинк</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="go" id="buildBtn" style="margin-top:16px">Показать сборки</button>
+  </div>
+
+  <div id="result"><div class="empty">Нажми «Показать сборки», чтобы увидеть варианты 👆</div></div>
+
+  <footer>
+    Цены ориентировочные и не являются офертой. Ссылки могут быть партнёрскими.
+  </footer>
+</div>
+
+<script>
+/* ---------- База сборок (захардкожена, легко менять) ---------- */
+const BUILD_DB = {
+  office: [
+    {
+      title: "Базовая офисная",
+      tag: "Учёба, документы, браузер, Zoom",
+      parts: [
+        {name:"CPU", model:"AMD Ryzen 5 5600G", price:13000},
+        {name:"Мат. плата", model:"B550M", price:7000},
+        {name:"Память", model:"16 ГБ DDR4", price:3500},
+        {name:"SSD", model:"500 ГБ NVMe", price:3000},
+        {name:"БП", model:"500 Вт 80+", price:3500},
+        {name:"Корпус", model:"mATX", price:2500},
+      ]
+    },
+    {
+      title: "Офис + немного всего",
+      tag: "Запас на несколько лет",
+      parts: [
+        {name:"CPU", model:"Intel i5-12400", price:15000},
+        {name:"Мат. плата", model:"B660M", price:9000},
+        {name:"Память", model:"32 ГБ DDR4", price:6500},
+        {name:"SSD", model:"1 ТБ NVMe", price:5500},
+        {name:"БП", model:"650 Вт 80+ Bronze", price:4500},
+        {name:"Корпус", model:"ATX", price:3500},
+      ]
+    }
+  ],
+  gaming: [
+    {
+      title: "Игровая базовая",
+      tag: "Full HD, средние-высокие настройки",
+      parts: [
+        {name:"CPU", model:"Ryzen 5 5600", price:11000},
+        {name:"Видеокарта", model:"RTX 4060 8 ГБ", price:32000},
+        {name:"Мат. плата", model:"B550M", price:7000},
+        {name:"Память", model:"16 ГБ DDR4", price:3500},
+        {name:"SSD", model:"1 ТБ NVMe", price:5500},
+        {name:"БП", model:"650 Вт 80+ Bronze", price:4500},
+        {name:"Корпус", model:"ATX с продувом", price:4000},
+      ]
+    },
+    {
+      title: "Игровая продвинутая",
+      tag: "Full HD/2K, высокие настройки",
+      parts: [
+        {name:"CPU", model:"Ryzen 7 5700X", price:16000},
+        {name:"Видеокарта", model:"RTX 4070 12 ГБ", price:58000},
+        {name:"Мат. плата", model:"B550", price:9000},
+        {name:"Память", model:"32 ГБ DDR4", price:6500},
+        {name:"SSD", model:"1 ТБ NVMe", price:5500},
+        {name:"БП", model:"750 Вт 80+ Gold", price:7500},
+        {name:"Корпус", model:"ATX mesh", price:5000},
+      ]
+    }
+  ],
+  montage: [
+    {
+      title: "Монтаж Full HD",
+      tag: "Premiere/DaVinci, 1080p",
+      parts: [
+        {name:"CPU", model:"Intel i5-13400", price:17000},
+        {name:"Видеокарта", model:"RTX 4060 8 ГБ", price:32000},
+        {name:"Мат. плата", model:"B760M", price:10000},
+        {name:"Память", model:"32 ГБ DDR4", price:6500},
+        {name:"SSD", model:"1 ТБ NVMe", price:5500},
+        {name:"БП", model:"700 Вт 80+ Bronze", price:5500},
+        {name:"Корпус", model:"ATX", price:4000},
+      ]
+    },
+    {
+      title: "Монтаж 4K",
+      tag: "4K, тяжёлые проекты",
+      parts: [
+        {name:"CPU", model:"Ryzen 9 5900X", price:28000},
+        {name:"Видеокарта", model:"RTX 4070 12 ГБ", price:58000},
+        {name:"Мат. плата", model:"B550", price:10000},
+        {name:"Память", model:"64 ГБ DDR4", price:13000},
+        {name:"SSD", model:"2 ТБ NVMe", price:10000},
+        {name:"БП", model:"850 Вт 80+ Gold", price:9000},
+        {name:"Корпус", model:"ATX mesh", price:5500},
+      ]
+    }
+  ],
+  design: [
+    {
+      title: "Дизайн / 3D базовая",
+      tag: "Photoshop, Blender, Figma",
+      parts: [
+        {name:"CPU", model:"Ryzen 7 5700X", price:16000},
+        {name:"Видеокарта", model:"RTX 4060 Ti 16 ГБ", price:48000},
+        {name:"Мат. плата", model:"B550", price:9000},
+        {name:"Память", model:"32 ГБ DDR4", price:6500},
+        {name:"SSD", model:"1 ТБ NVMe", price:5500},
+        {name:"БП", model:"700 Вт 80+ Bronze", price:5500},
+        {name:"Корпус", model:"ATX", price:4000},
+      ]
+    },
+    {
+      title: "Дизайн / 3D продвинутая",
+      tag: "Рендер, сложные сцены",
+      parts: [
+        {name:"CPU", model:"Ryzen 9 7900X", price:45000},
+        {name:"Видеокарта", model:"RTX 4070 Ti 12 ГБ", price:75000},
+        {name:"Мат. плата", model:"B650", price:14000},
+        {name:"Память", model:"64 ГБ DDR5", price:18000},
+        {name:"SSD", model:"2 ТБ NVMe", price:10000},
+        {name:"БП", model:"850 Вт 80+ Gold", price:9000},
+        {name:"Корпус", model:"ATX mesh", price:5500},
+      ]
+    }
+  ]
+};
+
+/* ---------- Партнёрские ссылки (замени на свои!) ---------- */
+const SHOP_URLS = {
+  dns:      "https://www.dns-shop.ru/search/?q=",
+  citilink: "https://www.citilink.ru/search/?text="
+};
+
+/* ---------- Состояние ---------- */
+let state = { task:"office", shop:"dns", budget:80000 };
+
+/* ---------- Обработчики чипов ---------- */
+function initChips(containerId, dataKey, onChange){
+  document.getElementById(containerId).addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if(!chip) return;
+    const siblings = chip.parentElement.querySelectorAll(".chip");
+    siblings.forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    state[dataKey] = chip.dataset[dataKey];
+    onChange && onChange();
+  });
+}
+
+initChips("tasks", "task");
+initChips("shops", "shop");
+
+/* ---------- Рендер ---------- */
+function money(n){ return n.toLocaleString("ru-RU") + " ₽"; }
+
+function renderBuilds(){
+  const budget = Number(document.getElementById("budget").value) || 0;
+  const list = BUILD_DB[state.task] || [];
+  const box = document.getElementById("result");
+
+  if(!list.length){
+    box.innerHTML = `<div class="empty">Для этой задачи сборок пока нет.</div>`;
+    return;
+  }
+
+  const html = list.map(build => {
+    const total = build.parts.reduce((s,p) => s + p.price, 0);
+    const fit = total <= budget;
+    const parts = build.parts.map(p => {
+      const q = encodeURIComponent(p.model);
+      const url = SHOP_URLS[state.shop] + q;
+      return `<li><span class="name">${p.name}</span>
+              <span>${p.model} — ${money(p.price)}</span></li>`;
+    }).join("");
+
+    return `
+      <div class="build">
+        <div>
+          <span class="badge">${fit ? "В бюджете" : "Чуть выше бюджета"}</span>
+          <h3 style="margin-top:8px">${build.title}</h3>
+          <div class="tag">${build.tag}</div>
+        </div>
+        <div class="price">${money(total)}</div>
+        <ul class="parts">${parts}</ul>
+        <a class="buy" href="${SHOP_URLS[state.shop] + encodeURIComponent(build.title)}"
+           target="_blank" rel="noopener">Посмотреть комплектующие →</a>
+      </div>`;
+  }).join("");
+
+  box.innerHTML = `<div class="builds">${html}</div>`;
+}
+
+document.getElementById("buildBtn").addEventListener("click", () => {
+  state.budget = Number(document.getElementById("budget").value) || 0;
+  renderBuilds();
+});
+</script>
+</body>
+</html>
