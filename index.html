@@ -61,6 +61,8 @@
     border-bottom:1px dashed #262b45;padding-bottom:6px}
   .parts li:last-child{border:none}
   .parts .name{color:var(--muted)}
+  .parts a{color:var(--accent);text-decoration:none}
+  .parts a:hover{text-decoration:underline}
   .buy{
     margin-top:auto;text-align:center;text-decoration:none;padding:12px;
     border-radius:12px;background:#12162a;border:1px solid #2e3452;
@@ -100,6 +102,9 @@
         <div class="row" id="shops" style="margin-top:0">
           <div class="chip active" data-shop="dns">DNS</div>
           <div class="chip" data-shop="citilink">Ситилинк</div>
+          <div class="chip" data-shop="ozon">Ozon</div>
+          <div class="chip" data-shop="wb">Wildberries</div>
+          <div class="chip" data-shop="yandex">Яндекс Маркет</div>
         </div>
       </div>
     </div>
@@ -115,31 +120,40 @@
 </div>
 
 <script>
-/* ---------- База сборок (захардкожена, легко менять) ---------- */
+/* ============================================================
+   ВАЖНО: ЗДЕСЬ ТЫ ВСТАВЛЯЕШЬ СВОИ ПАРТНЁРСКИЕ ССЫЛКИ
+   ============================================================
+   Как это работает:
+   - Найди нужный товар в магазине (например, DNS).
+   - Получи партнёрскую ссылку через Admitad / Ozon / WB.
+   - Вставь её в поле url для нужного товара ниже.
+   Если url пустой ("") — ссылка будет вести на поиск этого товара в выбранном магазине.
+*/
+
 const BUILD_DB = {
   office: [
     {
       title: "Базовая офисная",
       tag: "Учёба, документы, браузер, Zoom",
       parts: [
-        {name:"CPU", model:"AMD Ryzen 5 5600G", price:13000},
-        {name:"Мат. плата", model:"B550M", price:7000},
-        {name:"Память", model:"16 ГБ DDR4", price:3500},
-        {name:"SSD", model:"500 ГБ NVMe", price:3000},
-        {name:"БП", model:"500 Вт 80+", price:3500},
-        {name:"Корпус", model:"mATX", price:2500},
+        {name:"CPU", model:"AMD Ryzen 5 5600G", price:13000, url:""},
+        {name:"Мат. плата", model:"MSI B550M PRO-VDH", price:7000, url:""},
+        {name:"Память", model:"Kingston Fury 16 ГБ DDR4", price:3500, url:""},
+        {name:"SSD", model:"Kingston NV2 500 ГБ", price:3000, url:""},
+        {name:"БП", model:"DeepCool PF500 500 Вт", price:3500, url:""},
+        {name:"Корпус", model:"Zalman i3 Neo", price:2500, url:""},
       ]
     },
     {
       title: "Офис + немного всего",
       tag: "Запас на несколько лет",
       parts: [
-        {name:"CPU", model:"Intel i5-12400", price:15000},
-        {name:"Мат. плата", model:"B660M", price:9000},
-        {name:"Память", model:"32 ГБ DDR4", price:6500},
-        {name:"SSD", model:"1 ТБ NVMe", price:5500},
-        {name:"БП", model:"650 Вт 80+ Bronze", price:4500},
-        {name:"Корпус", model:"ATX", price:3500},
+        {name:"CPU", model:"Intel Core i5-12400", price:15000, url:""},
+        {name:"Мат. плата", model:"MSI PRO B660M-A", price:9000, url:""},
+        {name:"Память", model:"Kingston Fury 32 ГБ DDR4", price:6500, url:""},
+        {name:"SSD", model:"Samsung 980 1 ТБ", price:5500, url:""},
+        {name:"БП", model:"Chieftec 650W 80+ Bronze", price:4500, url:""},
+        {name:"Корпус", model:"DeepCool MATREXX 50", price:3500, url:""},
       ]
     }
   ],
@@ -148,26 +162,26 @@ const BUILD_DB = {
       title: "Игровая базовая",
       tag: "Full HD, средние-высокие настройки",
       parts: [
-        {name:"CPU", model:"Ryzen 5 5600", price:11000},
-        {name:"Видеокарта", model:"RTX 4060 8 ГБ", price:32000},
-        {name:"Мат. плата", model:"B550M", price:7000},
-        {name:"Память", model:"16 ГБ DDR4", price:3500},
-        {name:"SSD", model:"1 ТБ NVMe", price:5500},
-        {name:"БП", model:"650 Вт 80+ Bronze", price:4500},
-        {name:"Корпус", model:"ATX с продувом", price:4000},
+        {name:"CPU", model:"AMD Ryzen 5 5600", price:11000, url:""},
+        {name:"Видеокарта", model:"Palit GeForce RTX 4060 Dual", price:32000, url:""},
+        {name:"Мат. плата", model:"MSI B550M PRO-VDH", price:7000, url:""},
+        {name:"Память", model:"Kingston Fury 16 ГБ DDR4", price:3500, url:""},
+        {name:"SSD", model:"Samsung 980 1 ТБ", price:5500, url:""},
+        {name:"БП", model:"Chieftec 650W 80+ Bronze", price:4500, url:""},
+        {name:"Корпус", model:"Zalman i3 Neo", price:4000, url:""},
       ]
     },
     {
       title: "Игровая продвинутая",
       tag: "Full HD/2K, высокие настройки",
       parts: [
-        {name:"CPU", model:"Ryzen 7 5700X", price:16000},
-        {name:"Видеокарта", model:"RTX 4070 12 ГБ", price:58000},
-        {name:"Мат. плата", model:"B550", price:9000},
-        {name:"Память", model:"32 ГБ DDR4", price:6500},
-        {name:"SSD", model:"1 ТБ NVMe", price:5500},
-        {name:"БП", model:"750 Вт 80+ Gold", price:7500},
-        {name:"Корпус", model:"ATX mesh", price:5000},
+        {name:"CPU", model:"AMD Ryzen 7 5700X", price:16000, url:""},
+        {name:"Видеокарта", model:"Gigabyte GeForce RTX 4070 Windforce", price:58000, url:""},
+        {name:"Мат. плата", model:"MSI B550-A PRO", price:9000, url:""},
+        {name:"Память", model:"Kingston Fury 32 ГБ DDR4", price:6500, url:""},
+        {name:"SSD", model:"Samsung 980 1 ТБ", price:5500, url:""},
+        {name:"БП", model:"DeepCool PQ750M 750W Gold", price:7500, url:""},
+        {name:"Корпус", model:"Lian Li Lancool 216", price:5000, url:""},
       ]
     }
   ],
@@ -176,26 +190,26 @@ const BUILD_DB = {
       title: "Монтаж Full HD",
       tag: "Premiere/DaVinci, 1080p",
       parts: [
-        {name:"CPU", model:"Intel i5-13400", price:17000},
-        {name:"Видеокарта", model:"RTX 4060 8 ГБ", price:32000},
-        {name:"Мат. плата", model:"B760M", price:10000},
-        {name:"Память", model:"32 ГБ DDR4", price:6500},
-        {name:"SSD", model:"1 ТБ NVMe", price:5500},
-        {name:"БП", model:"700 Вт 80+ Bronze", price:5500},
-        {name:"Корпус", model:"ATX", price:4000},
+        {name:"CPU", model:"Intel Core i5-13400", price:17000, url:""},
+        {name:"Видеокарта", model:"Palit GeForce RTX 4060 Dual", price:32000, url:""},
+        {name:"Мат. плата", model:"MSI PRO B760M-A", price:10000, url:""},
+        {name:"Память", model:"Kingston Fury 32 ГБ DDR4", price:6500, url:""},
+        {name:"SSD", model:"Samsung 980 1 ТБ", price:5500, url:""},
+        {name:"БП", model:"Chieftec 700W 80+ Bronze", price:5500, url:""},
+        {name:"Корпус", model:"DeepCool MATREXX 50", price:4000, url:""},
       ]
     },
     {
       title: "Монтаж 4K",
       tag: "4K, тяжёлые проекты",
       parts: [
-        {name:"CPU", model:"Ryzen 9 5900X", price:28000},
-        {name:"Видеокарта", model:"RTX 4070 12 ГБ", price:58000},
-        {name:"Мат. плата", model:"B550", price:10000},
-        {name:"Память", model:"64 ГБ DDR4", price:13000},
-        {name:"SSD", model:"2 ТБ NVMe", price:10000},
-        {name:"БП", model:"850 Вт 80+ Gold", price:9000},
-        {name:"Корпус", model:"ATX mesh", price:5500},
+        {name:"CPU", model:"AMD Ryzen 9 5900X", price:28000, url:""},
+        {name:"Видеокарта", model:"Gigabyte GeForce RTX 4070 Windforce", price:58000, url:""},
+        {name:"Мат. плата", model:"MSI B550-A PRO", price:10000, url:""},
+        {name:"Память", model:"Kingston Fury 64 ГБ DDR4", price:13000, url:""},
+        {name:"SSD", model:"Samsung 980 Pro 2 ТБ", price:10000, url:""},
+        {name:"БП", model:"DeepCool PQ850M 850W Gold", price:9000, url:""},
+        {name:"Корпус", model:"Lian Li Lancool 216", price:5500, url:""},
       ]
     }
   ],
@@ -204,42 +218,45 @@ const BUILD_DB = {
       title: "Дизайн / 3D базовая",
       tag: "Photoshop, Blender, Figma",
       parts: [
-        {name:"CPU", model:"Ryzen 7 5700X", price:16000},
-        {name:"Видеокарта", model:"RTX 4060 Ti 16 ГБ", price:48000},
-        {name:"Мат. плата", model:"B550", price:9000},
-        {name:"Память", model:"32 ГБ DDR4", price:6500},
-        {name:"SSD", model:"1 ТБ NVMe", price:5500},
-        {name:"БП", model:"700 Вт 80+ Bronze", price:5500},
-        {name:"Корпус", model:"ATX", price:4000},
+        {name:"CPU", model:"AMD Ryzen 7 5700X", price:16000, url:""},
+        {name:"Видеокарта", model:"Palit GeForce RTX 4060 Ti Dual 16 ГБ", price:48000, url:""},
+        {name:"Мат. плата", model:"MSI B550-A PRO", price:9000, url:""},
+        {name:"Память", model:"Kingston Fury 32 ГБ DDR4", price:6500, url:""},
+        {name:"SSD", model:"Samsung 980 1 ТБ", price:5500, url:""},
+        {name:"БП", model:"Chieftec 700W 80+ Bronze", price:5500, url:""},
+        {name:"Корпус", model:"DeepCool MATREXX 50", price:4000, url:""},
       ]
     },
     {
       title: "Дизайн / 3D продвинутая",
       tag: "Рендер, сложные сцены",
       parts: [
-        {name:"CPU", model:"Ryzen 9 7900X", price:45000},
-        {name:"Видеокарта", model:"RTX 4070 Ti 12 ГБ", price:75000},
-        {name:"Мат. плата", model:"B650", price:14000},
-        {name:"Память", model:"64 ГБ DDR5", price:18000},
-        {name:"SSD", model:"2 ТБ NVMe", price:10000},
-        {name:"БП", model:"850 Вт 80+ Gold", price:9000},
-        {name:"Корпус", model:"ATX mesh", price:5500},
+        {name:"CPU", model:"AMD Ryzen 9 7900X", price:45000, url:""},
+        {name:"Видеокарта", model:"Gigabyte GeForce RTX 4070 Ti Gaming OC", price:75000, url:""},
+        {name:"Мат. плата", model:"MSI PRO B650-P", price:14000, url:""},
+        {name:"Память", model:"Kingston Fury 64 ГБ DDR5", price:18000, url:""},
+        {name:"SSD", model:"Samsung 980 Pro 2 ТБ", price:10000, url:""},
+        {name:"БП", model:"DeepCool PQ850M 850W Gold", price:9000, url:""},
+        {name:"Корпус", model:"Lian Li Lancool 216", price:5500, url:""},
       ]
     }
   ]
 };
 
-/* ---------- Партнёрские ссылки (замени на свои!) ---------- */
-const SHOP_URLS = {
+/* ---------- Ссылки на поиск (если url товара пустой) ---------- */
+const SHOP_SEARCH = {
   dns:      "https://www.dns-shop.ru/search/?q=",
-  citilink: "https://www.citilink.ru/search/?text="
+  citilink: "https://www.citilink.ru/search/?text=",
+  ozon:     "https://www.ozon.ru/search/?text=",
+  wb:       "https://www.wildberries.ru/catalog/0/search.aspx?search=",
+  yandex:   "https://market.yandex.ru/search?text="
 };
 
 /* ---------- Состояние ---------- */
-let state = { task:"office", shop:"dns", budget:80000 };
+let state = { task:"office", shop:"dns" };
 
 /* ---------- Обработчики чипов ---------- */
-function initChips(containerId, dataKey, onChange){
+function initChips(containerId, dataKey){
   document.getElementById(containerId).addEventListener("click", e => {
     const chip = e.target.closest(".chip");
     if(!chip) return;
@@ -247,7 +264,6 @@ function initChips(containerId, dataKey, onChange){
     siblings.forEach(c => c.classList.remove("active"));
     chip.classList.add("active");
     state[dataKey] = chip.dataset[dataKey];
-    onChange && onChange();
   });
 }
 
@@ -256,6 +272,13 @@ initChips("shops", "shop");
 
 /* ---------- Рендер ---------- */
 function money(n){ return n.toLocaleString("ru-RU") + " ₽"; }
+
+function getLink(part, shop){
+  // Если у товара есть своя партнёрская ссылка — используем её
+  if (part.url && part.url.length > 5) return part.url;
+  // Иначе ведём на поиск магазина
+  return SHOP_SEARCH[shop] + encodeURIComponent(part.model);
+}
 
 function renderBuilds(){
   const budget = Number(document.getElementById("budget").value) || 0;
@@ -271,10 +294,9 @@ function renderBuilds(){
     const total = build.parts.reduce((s,p) => s + p.price, 0);
     const fit = total <= budget;
     const parts = build.parts.map(p => {
-      const q = encodeURIComponent(p.model);
-      const url = SHOP_URLS[state.shop] + q;
+      const url = getLink(p, state.shop);
       return `<li><span class="name">${p.name}</span>
-              <span>${p.model} — ${money(p.price)}</span></li>`;
+              <span><a href="${url}" target="_blank" rel="noopener">${p.model}</a> — ${money(p.price)}</span></li>`;
     }).join("");
 
     return `
@@ -286,18 +308,14 @@ function renderBuilds(){
         </div>
         <div class="price">${money(total)}</div>
         <ul class="parts">${parts}</ul>
-        <a class="buy" href="${SHOP_URLS[state.shop] + encodeURIComponent(build.title)}"
-           target="_blank" rel="noopener">Посмотреть комплектующие →</a>
       </div>`;
   }).join("");
 
   box.innerHTML = `<div class="builds">${html}</div>`;
 }
 
-document.getElementById("buildBtn").addEventListener("click", () => {
-  state.budget = Number(document.getElementById("budget").value) || 0;
-  renderBuilds();
-});
+document.getElementById("buildBtn").addEventListener("click", renderBuilds);
 </script>
 </body>
+</html>
 </html>
